@@ -114,3 +114,32 @@ body {
 	background-color: #FFFFFC;
 	color: #000000;
 }
+
+/* sign up page styles */
+.sign__main {
+	margin-top: 25vh;
+	margin-left: 35vw;
+	margin-right: 35vw;
+	padding: 10px;
+	background-color: #FFFFFC;
+	display: flex;
+	flex-direction: column;
+	justify-content:space-between;
+	height: 22vh;
+
+	border-radius: 25px;
+}
+
+.sign__main button {
+	background-color: #5C6B73;
+	font-size: 20px;
+	border: none;
+	height: 5vh;
+	transition: ease-in-out 0.5s all;
+}
+.sign__main button:hover {
+	background-color: #5C6B73;
+	font-weight: bold;
+	border-radius: 20px;
+	
+}

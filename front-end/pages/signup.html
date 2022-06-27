@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="../styles.css">
+	</head>
+	<body>
+		<div class="start__title">
+			<h1>Sign up</h1>
+		</div>
+
+        <div class="back__button">
+            <button onclick="window.location = '../index.html'">Back</button>
+        </div>
+
+		<div class="sign__main">
+			<div class="login__form">
+                <label for="username">Username</label>
+                <input type="text" id="username" />
+                <label for="passord">Password</label>
+                <input type="password" id="password" />
+                <label for="repassword">Retype Password</label>
+                <input type="password" id="repassword" />
+                <p id="invalid"></p>
+                <button id="signBut" type="submit" onclick="signupUser()">Submit</button>
+            </div>
+		</div>
+
+		<script src="./signUp.js"></script>
+	</body>
+</html>
