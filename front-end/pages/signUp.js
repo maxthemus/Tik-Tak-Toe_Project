@@ -1,25 +1,47 @@
 //function for signing up new users
-function signupUser() {
+async function signupUser() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const repassword = document.getElementById('repassword').value;
 
-    //Check to see if username is taken in the DB
-    const usernameTake = false; // ACCESS DB HERE
-
-    if(usernameTake) {
-        //if username is taken
-        document.getElementById('invalid').innerHTML = "Username is taken!";
-        document.getElementById('signBut').style.height = "30px";
-        return;
-    } 
-    //if username is not taken
-    //Check if the passwords match up
     if(password === repassword) {
         //Create new user
-        
-        //ACCESS DB HERE
+        //Check to see if username is taken in the DB
+        const usernameTaken = await fetch("http://localhost:4000/api/signup", {
+            method: 'POST',
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then(res => res.json())
+        .then((data, err) => {
+            console.log(data);
 
+            if(err) { 
+                alert("Server are currently down sorry!");
+                return false;
+            }
+        const {usernameTaken} = data;
+        
+        if(!usernameTaken) {
+            return false;
+        }
+        return true;
+        });
+
+        if(usernameTaken) {
+            //if username is taken
+            document.getElementById('invalid').innerHTML = "Username is taken!";
+            document.getElementById('signBut').style.height = "30px";
+            return;
+        } else {
+            alert("Created new user!");
+            window.location.href="./login.html";
+        }
     } else {
         //prompt try again
         document.getElementById('invalid').innerHTML = "Passwords don't match!";
