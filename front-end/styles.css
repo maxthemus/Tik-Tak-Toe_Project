@@ -1,8 +1,116 @@
 
+/*
+	link to colour pallet	
+	https://coolors.co/000000-fffffc-beb7a4-5c6b73-1c7c54 
+*/
+* {
+	margin: 0;
+	padding: 0;
+	font-family:'Courier New', Courier, monospace;
+}
+
 body {
 	background-color: black;
 }
 
-h1 {
-	font-size: 50px;
+/* Start page styles */
+.start__title {
+	position: absolute;
+	left: 50%;
+	top: 10%;
+	transform: translate(-50%, 0);
+	padding: 10px;
+	padding-left: 7vw;
+	padding-right: 7vw;
+	border: 1vw solid #BEB7A4;
+	border-radius: 10px;
+	background-color: #FFFFFC;
+}
+.start__title h1 {
+	font-size: 30px;
+	font-family: monospace
+}
+
+.start__main {
+	margin-top: 25vh;
+	margin-left: 35vw;
+	margin-right: 35vw;
+	padding: 10px;
+	background-color: #FFFFFC;
+	display: flex;
+	flex-direction: column;
+	justify-content:space-between;
+	height: 17vh;
+
+	border-radius: 25px;
+}
+
+.start__main button {
+	background-color: #BEB7A4;
+	font-size: 20px;
+	border: none;
+	height: 5vh;
+	transition: ease-in-out 0.5s all;
+}
+.start__main button:hover {
+	background-color: #5C6B73;
+	font-weight: bold;
+	border-radius: 20px;
+	
+}
+
+
+.start__main .start__login {
+	border-top-right-radius: 20px;
+	border-top-left-radius: 20px;
+}
+.start__main .start__guest {
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+}
+
+/* login page styles */
+.login__form {
+	padding: 5px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 20px;
+	background-color: #BEB7A4;
+}
+.login__form input, .login__form button {
+	width: 50%;
+	margin: 5px;
+}
+
+#invalid {
+	color: red;
+	font-size: 13px;
+}
+
+.login__form button {
+	background-color: #5C6B73;
+}
+
+/* back button styles */
+.back__button {
+	left: 5vw;
+	top: 5vh;
+	position: absolute;
+
+}
+
+.back__button button {
+	border: 1px solid #FFFFFC;
+	color: #FFFFFC;
+	font-size: 25px;
+	padding: 10px;
+	text-decoration: none;
+	background-color: #000000;
+	transition: ease-in-out 0.5s all;
+}
+.back__button button:hover {
+	background-color: #FFFFFC;
+	color: #000000;
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../styles.css">
+    </head>
+    <body>
+        <div class="start__title">
+			<h1>TikTakToe.com</h1>
+		</div>
+
+        <div class="back__button">
+            <button onclick="window.location = '../index.html'">Back</button>
+        </div>
+
+        <div class="start__main">
+            <div class="login__form">
+                <label for="username">Username</label>
+                <input type="text" id="username" />
+                <label for="password">Password</label>
+                <input type="password" id="password" />
+                <p id="invalid"></p>
+                <button id="loginBut" type="submit" onclick="loginUser()">Submit</button>
+            </div>
+        </div>
+
+        <script src="./login.js"></script>
+    </body>
+</html>
