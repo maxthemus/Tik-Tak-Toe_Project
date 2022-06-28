@@ -143,3 +143,39 @@ body {
 	border-radius: 20px;
 	
 }
+
+/* user info */
+.userInfo {
+	position: absolute;
+	right: 5vw;
+	top: 5vh;
+	transform: translate(-50%, 0);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.userInfo h1 {
+	color: white;
+}
+
+.userInfo .userInfo__stats p {
+	color: white;
+}
+
+/* main page styles */
+.main__title {
+	position: absolute;
+	left: 50%;
+	top: 5%;
+	transform: translate(-50%, 0);
+	padding: 10px;
+	padding-left: 7vw;
+	padding-right: 7vw;
+	border: 1vw solid #BEB7A4;
+	border-radius: 10px;
+	background-color: #FFFFFC;
+}
+.main__title h1 {
+	font-size: 30px;
+	font-family: monospace
+}

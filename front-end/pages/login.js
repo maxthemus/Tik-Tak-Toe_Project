@@ -1,3 +1,5 @@
+
+
 //Function for logging in user
 async function loginUser() {
     //variables for the username and password
@@ -18,22 +20,31 @@ async function loginUser() {
     .then((data, err) => {
         if(err) { 
             alert("Servers are currently down sorry!");
-            return false;
+            return {res: false};
         }
-       const {loggedIn} = data;
-       
-       if(!loggedIn) {
-        return false;
-       }
-       return true;
+        const {loggedIn} = data;
+        
+
+        if(!loggedIn) {
+            return {res: false};
+        }
+        return {
+            res: true,
+            userId: data.userId
+        };
     }).catch((err) => {
         alert("Servers are currently down sorry!");
-        return false;
+        return {res: false};
     });
 
-    if(loginResult) {
+    if(loginResult.res) {
         //Login worked
-        alert("You have logged in");
+        sessionStorage.setItem("userId", loginResult.userId);
+        /*
+            could add this if you wanted a remember me button on login
+            localStorage.setItem('userId', loginResult.userId);
+        */
+        window.location.href='./menu.html';
     } else {
         //Login failed
         document.getElementById('invalid').innerHTML = "Invalid username or password";

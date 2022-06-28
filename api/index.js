@@ -42,15 +42,17 @@ app.post('/api/login', async (req, res) => {
             const foundUser = {
                 username: results[0].username,
                 password: results[0].password,
-                userId: results[0].userId
+                userId: results[0].userID
             }
             //if username match then check password 
             if(tempUser.password === foundUser.password) {
                 //if both match return ture
+                console.log(foundUser);
+
                 res.send({
                     loggedIn: true,
                     userId: foundUser.userId
-                })
+                });
             } else {
                 res.send({
                     loggedIn: false
@@ -92,6 +94,33 @@ app.post('/api/signup', async (req, res) => {
 
 //guest user
 
+
+
+//Get user info
+app.get('/api/user/:userId', async (req, res) => {
+    const userId = req.params.userId;
+
+    const statement = `SELECT * FROM users WHERE userID='${userId}';`;
+    connection.query(statement, (err, results) => {
+        console.log(results);
+
+        if(results.length === 1) {
+            //The user was found
+            const user = {
+                username: results[0].username,
+                userId: results[0].userID
+            }
+            res.send({
+                valid: true,
+                user
+            });
+        } else {
+            res.send({
+                valid: false
+            })
+        }
+    });
+})
 
 
 //Starting the server
