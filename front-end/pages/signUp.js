@@ -23,7 +23,7 @@ async function signupUser() {
 
             if(err) { 
                 alert("Server are currently down sorry!");
-                return false;
+                return true;
             }
         const {usernameTaken} = data;
         
@@ -31,6 +31,9 @@ async function signupUser() {
             return false;
         }
         return true;
+        }).catch((err) => {
+            alert("Server are currently down sorry!");
+            return true;
         });
 
         if(usernameTaken) {

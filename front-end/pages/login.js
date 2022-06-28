@@ -17,7 +17,7 @@ async function loginUser() {
     .then(res => res.json())
     .then((data, err) => {
         if(err) { 
-            alert("Server are currently down sorry!");
+            alert("Servers are currently down sorry!");
             return false;
         }
        const {loggedIn} = data;
@@ -26,6 +26,9 @@ async function loginUser() {
         return false;
        }
        return true;
+    }).catch((err) => {
+        alert("Servers are currently down sorry!");
+        return false;
     });
 
     if(loginResult) {
