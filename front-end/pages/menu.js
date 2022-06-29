@@ -36,3 +36,14 @@ function updateText() {
     console.log("CALLED");
     document.getElementById('dis__username').innerHTML = username;
 }
+
+
+
+//Functions for putting users into a queue to find games
+let findingGame = false;
+
+function findGame() {
+    let findingGame = true;
+
+    alert("You are finding a game");
+}

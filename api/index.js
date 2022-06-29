@@ -122,6 +122,100 @@ app.get('/api/user/:userId', async (req, res) => {
     });
 })
 
+/* code for making games and creating servers for the lobbies */
+let currentGames = [
+    {
+        gameId: 0, 
+        gameIsPrivate: false,
+        gameBoard: [],
+        userId: [1,2],
+        currentTurn: 0
+    },
+]
+
+app.get('/api/game/:gameId', async (req, res) => {
+    let gameId = req.params.gameId;
+    let tempUserId = req.body.userId;
+
+    let validObj = await validateGame(gameId, tempUserId);
+    res.send(validObj);
+})
+
+app.post('/api/game/createGame', async (req, res) => {
+    const creatorId = req.body.userId;
+    const gameIsPrivate = req.body.gameIsPrivate;
+
+    let gameId = await createGame(creatorId, gameIsPrivate);
+    
+
+    res.send({
+        gameId: gameId
+    });
+})
+
+app.post('/api/game/findGame', async (req, res) => {
+    const userId = req.body.userId;
+
+    let gameId = await findGame(userId);
+
+    res.send("DONE")
+})
+
+//Function for creating new games
+function createGame(creatorId, gameIsPrivate) {
+    let newGame = {
+        gameId: 0,
+        gameIsPrivate: gameIsPrivate,
+        gameBoard: [],
+        userId: [creatorId],
+        currentTurn: creatorId
+    }
+
+    let gameId = (currentGames.push(newGame)) - 1;
+    currentGames[gameId].gameId = gameId;
+
+    return gameId;
+}
+
+//Function for finding games
+function findGame(userId) {
+    //Look to see if currentGames length is greater than 0
+    //if greater than 0
+    //search through games and see if the game only has one player
+
+    //If all games are full create new game and add player
+}
+
+//Function for validating games
+function validateGame (gameId, tempUserId) {
+    //Checking for game validation
+    if(gameId < currentGames.length) {
+        //Game is valid
+        let currentGameInfo = currentGames[gameId];
+
+        //Checking for valid users playing the game
+        if(currentGameInfo.userId.includes(tempUserId)) {
+            //Users are valid
+            return {
+                gameIsValid: true,
+                userIsValid: true,
+                gameState: currentGameInfo
+            }
+
+        } else {
+            //Users are not valid
+            return {
+                gameIsValid: true,
+                userIsValid: false
+            }
+        }
+    } else {
+        //Game isn't valid
+        return {
+            gameIsValid: false,
+        };
+    }
+}
 
 //Starting the server
 app.listen(4000, (err) => {

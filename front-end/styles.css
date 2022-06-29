@@ -179,3 +179,34 @@ body {
 	font-size: 30px;
 	font-family: monospace
 }
+
+.main__main {
+	margin-top: 25vh;
+	margin-left: 35vw;
+	margin-right: 35vw;
+	padding: 10px;
+	background-color: #FFFFFC;
+	display: flex;
+	flex-direction: column;
+	justify-content:space-between;
+	height: 40vh;
+
+	border-radius: 25px;
+	border:20px solid #BEB7A4;
+}
+
+/* game page styles */
+.game__main {
+	margin-top: 25vh;
+	margin-left: 30vw;
+	margin-right: 30vw;
+	padding: 10px;
+	background-color: #FFFFFC;
+	display: flex;
+	flex-direction: column;
+	justify-content:space-between;
+	height: 50vh;
+
+	border-radius: 25px;
+	border:20px solid #BEB7A4;
+}
