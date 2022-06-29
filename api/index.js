@@ -123,6 +123,10 @@ app.get('/api/user/:userId', async (req, res) => {
 })
 
 /* code for making games and creating servers for the lobbies */
+
+//Could be implemented later to make sure players don't get into 2 games
+//let playersInGame = [];
+
 let currentGames = [
     {
         gameId: 0, 
@@ -147,7 +151,6 @@ app.post('/api/game/createGame', async (req, res) => {
 
     let gameId = await createGame(creatorId, gameIsPrivate);
     
-
     res.send({
         gameId: gameId
     });
@@ -158,17 +161,22 @@ app.post('/api/game/findGame', async (req, res) => {
 
     let gameId = await findGame(userId);
 
-    res.send("DONE")
+    res.send({
+        gameId: gameId,
+        gameData: currentGames[gameId]
+    });
 })
 
 //Function for creating new games
 function createGame(creatorId, gameIsPrivate) {
+    console.log(currentGames);
+
     let newGame = {
         gameId: 0,
         gameIsPrivate: gameIsPrivate,
         gameBoard: [],
         userId: [creatorId],
-        currentTurn: creatorId
+        currentTurn: 0
     }
 
     let gameId = (currentGames.push(newGame)) - 1;
@@ -178,12 +186,30 @@ function createGame(creatorId, gameIsPrivate) {
 }
 
 //Function for finding games
-function findGame(userId) {
+async function findGame(userId) {
     //Look to see if currentGames length is greater than 0
-    //if greater than 0
-    //search through games and see if the game only has one player
+    if(currentGames.length > 0) {
+        //if greater than 0
+        //search through games and see if the game only has one player
+        for(let i = 0; i < currentGames.length; i++) {
+            if(currentGames[i].userId.length == 1) {
+                //Found Game
+                joinGame(userId, i);
+                //Returning the game ID
+                return i;
+            }
+        }
+    } else {
+        //If all games are full create new game and add player
+        //OR If there are no games
+        let gameId = await createGame(userId, false);
+        return gameId;
+    }
+}
 
-    //If all games are full create new game and add player
+//Function for adding player to the game
+function joinGame (userId, gameId) {
+    currentGames[gameId].userId.push(userId);
 }
 
 //Function for validating games
@@ -216,6 +242,32 @@ function validateGame (gameId, tempUserId) {
         };
     }
 }
+
+//Funciton for removing the game from array
+function endGame(gameId) {
+    currentGames[gameId] = null;
+}
+
+
+/* TEMP END POINT TO END THE GAME! */
+app.get('/temp/endGame/:gameId', (req, res) => {
+    const gameId = req.params.gameId;
+
+    //Check to see if game exists
+    if(gameId > currentGames.length) {
+        //Game doesn't exist
+        res.send({
+            message:"Game doesn't exist"
+        })
+    }
+    console.log(`before == ${currentGames}`);
+    let endGameVal = endGame(gameId);
+    console.log(`after == ${currentGames}`);
+
+
+    res.send("DONE");
+})
+
 
 //Starting the server
 app.listen(4000, (err) => {
