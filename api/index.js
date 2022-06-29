@@ -143,6 +143,50 @@ app.get('/api/game/:gameId', async (req, res) => {
 
     let validObj = await validateGame(gameId, tempUserId);
     res.send(validObj);
+});
+
+app.post('/api/game/makeTurn/:gameId', async (req, res) => {
+    let gameId = req.params.gameId;
+    let tempUserId = req.body.userId;
+    let newGameState = req.body.gameState;
+
+    let validObj = await validateGame(gameId, tempUserId);
+
+    if(validObj.gameIsValid && validObj.userIsValid) {
+        let serverGameState = currentGames[gameId];
+        //GAME IS VALID
+        if(tempUserId === serverGameState.userId[serverGameState.currentTurn]) {
+            //If correct player than make turn
+            //Making turn
+            //Copying gameBoard
+            currentGames[gameId].gameBoard = newGameState.gameBoard;
+            //Changing player turn
+            if(currentGames[gameId].currentTurn === 0) {
+                currentGames[gameId].currentTurn = 1;
+            } else {
+                currentGames[gameId].currentTurn = 0;
+            }
+
+            //Sending info back to the client
+            res.send({
+                turnMade: true,
+                gameValid: true,
+                gameState: currentGames[gameId]
+            });
+        } else {
+            //Wrong player making the turn
+            res.send({
+                turnMade: false,
+                gameValid: true
+            });
+        }
+    } else {
+        //GAME ISN'T VALID
+        res.send({
+            turnMade: false, 
+            gameValid: false
+        });
+    }
 })
 
 app.post('/api/game/createGame', async (req, res) => {
