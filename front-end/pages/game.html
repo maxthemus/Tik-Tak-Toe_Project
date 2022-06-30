@@ -6,13 +6,18 @@
     <body>
         <!-- Logout button-->
         <div class="back__button">
-            <button onclick="logoutUser()">Logout</button>
+            <button onclick="leaveGame()">Leave game</button>
         </div>
 
         <!-- title -->
         <div class="main__title">
 			<h1>TikTakToe.com</h1>
 		</div>
+
+        <!-- game info -->
+        <div class="game__info">
+            <h1 id="game__num">Lobby: 1</h1>
+        </div>
 
         <div class="userInfo">
             <h1 id="dis__username">NAME</h1>
@@ -22,10 +27,54 @@
         </div>
 
         <div class="game__main">
-            
+            <div class="game__user__info">
+                <div class="info__left">
+                    <div class="top__row">
+                        <h1 id="local__turn"></h1>
+                        <h1 class="top__left" id="sml__piece"> </h1>
+                        <h1 id="sml__username">NAME</h1>
+                    </div>
+                    <div class="userInfo__stats">
+                        <p id="sml__stats" class="userStats">0-0-0</p>
+                    </div>
+                </div>
+
+                <div class="top__row">
+                    <h1 id="turn__arrow"></h1>
+                </div>
+
+                <div class="info__right">
+                    <div class="top__row">
+                        <h1 id="other__username">NAME</h1>
+                        <h1 class="top__right" id="other__piece"> </h1>
+                    </div>
+                        <div class="userInfo__stats">
+                            <p id="other__stats" class="userStats">0-0-0</p>
+                        </div>
+                </div>
+            </div>
+
+            <div class="main__game">
+                <div class="game__row__1">
+                    <button onclick="placePiece(0)" class="game__button"> </button>
+                    <button onclick="placePiece(1)" class="game__button"> </button>
+                    <button onclick="placePiece(2)" class="game__button"> </button>
+                </div>
+                <div class="game__row__2">
+                    <button onclick="placePiece(3)" class="game__button"> </button>
+                    <button onclick="placePiece(4)" class="game__button"> </button>
+                    <button onclick="placePiece(5)" class="game__button"> </button>
+                </div>
+                <div class="game__row__3">
+                    <button onclick="placePiece(6)" class="game__button"> </button>
+                    <button onclick="placePiece(7)" class="game__button"> </button>
+                    <button onclick="placePiece(8)" class="game__button"> </button>
+                </div>
+            </div>
         </div>
+
         
-        <script src="./menu.js"></script>
+        <script src="./game.js"></script>
     </body>
 
 </html>

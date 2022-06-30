@@ -47,7 +47,7 @@ app.post('/api/login', async (req, res) => {
             //if username match then check password 
             if(tempUser.password === foundUser.password) {
                 //if both match return ture
-                console.log(foundUser);
+                //console.log(foundUser);
 
                 res.send({
                     loggedIn: true,
@@ -102,7 +102,6 @@ app.get('/api/user/:userId', async (req, res) => {
 
     const statement = `SELECT * FROM users WHERE userID='${userId}';`;
     connection.query(statement, (err, results) => {
-        console.log(results);
 
         if(results.length === 1) {
             //The user was found
@@ -137,9 +136,10 @@ let currentGames = [
     },
 ]
 
-app.get('/api/game/:gameId', async (req, res) => {
+app.post('/api/game/getGame/:gameId', async (req, res) => {
     let gameId = req.params.gameId;
     let tempUserId = req.body.userId;
+
 
     let validObj = await validateGame(gameId, tempUserId);
     res.send(validObj);
@@ -205,6 +205,8 @@ app.post('/api/game/findGame', async (req, res) => {
 
     let gameId = await findGame(userId);
 
+    console.log(`Player: ${userId} Joined game: ${gameId}`);
+
     res.send({
         gameId: gameId,
         gameData: currentGames[gameId]
@@ -213,12 +215,12 @@ app.post('/api/game/findGame', async (req, res) => {
 
 //Function for creating new games
 function createGame(creatorId, gameIsPrivate) {
-    console.log(currentGames);
+    //console.log(currentGames);
 
     let newGame = {
         gameId: 0,
         gameIsPrivate: gameIsPrivate,
-        gameBoard: [],
+        gameBoard: [" "," "," "," "," "," "," "," "," "],
         userId: [creatorId],
         currentTurn: 0
     }
@@ -236,19 +238,18 @@ async function findGame(userId) {
         //if greater than 0
         //search through games and see if the game only has one player
         for(let i = 0; i < currentGames.length; i++) {
-            if(currentGames[i].userId.length == 1) {
+            if(currentGames[i].userId.length == 1 && !currentGames[i].gameIsPrivate) {
                 //Found Game
                 joinGame(userId, i);
                 //Returning the game ID
                 return i;
             }
         }
-    } else {
-        //If all games are full create new game and add player
-        //OR If there are no games
-        let gameId = await createGame(userId, false);
-        return gameId;
     }
+    //If all games are full create new game and add player
+    //OR If there are no games
+    let gameId = await createGame(userId, false);
+    return gameId;
 }
 
 //Function for adding player to the game
@@ -304,9 +305,7 @@ app.get('/temp/endGame/:gameId', (req, res) => {
             message:"Game doesn't exist"
         })
     }
-    console.log(`before == ${currentGames}`);
     let endGameVal = endGame(gameId);
-    console.log(`after == ${currentGames}`);
 
 
     res.send("DONE");

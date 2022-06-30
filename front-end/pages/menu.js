@@ -9,7 +9,8 @@ if(!sessionStorage.getItem('userId')) {
 }
 
 window.onload = function getUserInfo () {
-    fetch('http://localhost:4000/api/user/'+userId)
+
+  fetch('http://localhost:4000/api/user/'+userId)
         .then((res) => {
             return res.json();
         }).then(data => {
@@ -24,11 +25,14 @@ window.onload = function getUserInfo () {
                 logoutUser();
             }
         }).then(() => updateText());
+
 }
 
 //Function to loggout user and redirect to index.html
 function logoutUser() {
+    sessionStorage.removeItem('username');
     sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('gameId');
     window.location = '../index.html';
 }
 
@@ -42,8 +46,33 @@ function updateText() {
 //Functions for putting users into a queue to find games
 let findingGame = false;
 
-function findGame() {
+async function findGame() {
     let findingGame = true;
 
-    alert("You are finding a game");
+    //Send post request to the api
+    let serverRes = await fetch("http://localhost:4000/api/game/findGame", {
+        method: 'POST',
+        body: JSON.stringify({
+            userId: userId
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    }).then(res => {
+        console.log(res);
+        return res.json();
+    }).then(data => {
+        console.log("data");
+        console.log(data);
+        return data;
+    }).catch(err => {
+        alert("Server is currently down. Try again later!");
+        window.location.href="../index.html";
+    })
+
+    //Saving the gameData into session storage
+    sessionStorage.setItem("gameId", serverRes.gameId);
+
+    //Changing page to game page
+    window.location.href="./game.html";
 }
