@@ -167,12 +167,36 @@ app.post('/api/game/makeTurn/:gameId', async (req, res) => {
                 currentGames[gameId].currentTurn = 0;
             }
 
-            //Sending info back to the client
-            res.send({
-                turnMade: true,
-                gameValid: true,
-                gameState: currentGames[gameId]
-            });
+            //Checking to see if game has been won
+            let gameIsWon = await checkGameWon(currentGames[gameId]);
+            console.log(gameIsWon)
+
+            if(gameIsWon === 'X' || gameIsWon == '0') {
+                //Getting winner id  
+                let winId;
+                                  
+                if(gameIsWon === 'X') {
+                    winId = currentGames[gameId].userId[1];
+                } else {
+                    winId = currentGames[gameId].userId[0];
+                }
+    
+                //Game has been won
+                res.send({
+                    turnMade: true,
+                    gameValid: true,
+                    gameHasWon: true,
+                    winnerId: winId,
+                    gameState: currentGames[gameId]
+                })
+            } else {
+                //Sending info back to the client
+                res.send({
+                    turnMade: true,
+                    gameValid: true,
+                    gameState: currentGames[gameId]
+                });
+            }
         } else {
             //Wrong player making the turn
             res.send({
@@ -285,6 +309,44 @@ function validateGame (gameId, tempUserId) {
         return {
             gameIsValid: false,
         };
+    }
+}
+
+//Function for checking if player has won on board
+function checkGameWon(gameState) {
+    let tempBoard = gameState.gameBoard;
+
+    //Checking to see if row is same
+    for(let i = 0; i < 7; i += 3) {
+        if(tempBoard[i] === tempBoard[i+1] && tempBoard[i+1] === tempBoard[i+2]) {
+            if(tempBoard[i] !== ' ' && tempBoard[i + 1] !== ' ' && tempBoard[i + 2] !== ' ') {
+                console.log("IN A BAD PLACE TO BE 1");
+                return tempBoard[i];
+            }
+        }
+        //Checking if col is the same 
+        if(tempBoard[i] === tempBoard[i+3] && tempBoard[i+3] === tempBoard[i+6]) {
+            if(tempBoard[i] !== ' ' && tempBoard[i + 3] !== ' ' && tempBoard[i+6] !== ' ') {
+                console.log("IN A BAD PLACE TO BE 2");
+                return tempBoard[i];
+            }
+        }
+    }
+
+    //Checking topleft to bottom right
+    if(tempBoard[0] === tempBoard[4] && tempBoard[4] === tempBoard[8]) {
+        if(tempBoard[0] !== ' ' && tempBoard[4] !== ' ' && tempBoard[8] !== ' ') {
+            console.log("IN A BAD PLACE TO BE 3");
+            return tempBoard[0];
+        }
+    }
+
+    //Checking topRight to bottom left
+    if(tempBoard[2] === tempBoard[4] && tempBoard[4] === tempBoard[6]) {
+        if(tempBoard[0] !== ' ' && tempBoard[4] !== ' ' && tempBoard[6] !== ' ') {
+            console.log("IN A BAD PLACE TO BE 4");
+            return tempBoard[0];
+        }
     }
 }
 

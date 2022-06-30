@@ -19,6 +19,12 @@
             <h1 id="game__num">Lobby: 1</h1>
         </div>
 
+        <!-- game winner banner -->
+        <div id="winner__box" class="game__winner">
+            <h1 id="game__banner">Player has won!</h1>
+            <button onclick="leaveGame(true)">Exit</button>
+        </div>
+
         <div class="userInfo">
             <h1 id="dis__username">NAME</h1>
             <div class="userInfo__stats">
@@ -56,19 +62,19 @@
 
             <div class="main__game">
                 <div class="game__row__1">
-                    <button onclick="placePiece(0)" class="game__button"> </button>
-                    <button onclick="placePiece(1)" class="game__button"> </button>
-                    <button onclick="placePiece(2)" class="game__button"> </button>
+                    <button id="square__0" onclick="placePiece(0)" class="game__button"> </button>
+                    <button id="square__1" onclick="placePiece(1)" class="game__button"> </button>
+                    <button id="square__2" onclick="placePiece(2)" class="game__button"> </button>
                 </div>
                 <div class="game__row__2">
-                    <button onclick="placePiece(3)" class="game__button"> </button>
-                    <button onclick="placePiece(4)" class="game__button"> </button>
-                    <button onclick="placePiece(5)" class="game__button"> </button>
+                    <button id="square__3" onclick="placePiece(3)" class="game__button"> </button>
+                    <button id="square__4" onclick="placePiece(4)" class="game__button"> </button>
+                    <button id="square__5" onclick="placePiece(5)" class="game__button"> </button>
                 </div>
                 <div class="game__row__3">
-                    <button onclick="placePiece(6)" class="game__button"> </button>
-                    <button onclick="placePiece(7)" class="game__button"> </button>
-                    <button onclick="placePiece(8)" class="game__button"> </button>
+                    <button id="square__6" onclick="placePiece(6)" class="game__button"> </button>
+                    <button id="square__7" onclick="placePiece(7)" class="game__button"> </button>
+                    <button id="square__8" onclick="placePiece(8)" class="game__button"> </button>
                 </div>
             </div>
         </div>

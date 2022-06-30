@@ -14,6 +14,9 @@ let currentTurn;
 let gameIsPrivate;
 let usersInGame;
 
+//Game ending variables
+let hasWon = false;
+
 //Other user info
 let otherUserId;
 let otherUsername;
@@ -93,6 +96,11 @@ function updateText() {
     //Setting the users tokens
     document.getElementById('sml__piece').innerHTML = userToken;
     document.getElementById('other__piece').innerHTML = otherToken;
+
+    //placing the pieces on the board
+    for(let i = 0; i < board.length; i++) {
+        document.getElementById(`square__${i}`).innerHTML = board[i];
+    }
 }
 
 
@@ -122,6 +130,12 @@ function getGameInfo() {
             logoutUser();
         }
 
+        //Checking for if the game has been won
+        //Check for if game has won
+        if(data.gameHasWon) {
+            handleWin(data);
+         }
+
         //Data is valid
         storeRequestData(data.gameState);
 
@@ -149,22 +163,25 @@ function getOtherUserInfo(otherUserId) {
 
 //Function for making a turn
 function placePiece(index) {
-    //Check if it is users turn
-    if(currentTurn === userId) {
-        //Is local players turn
-        
-        //Check if place is empty
-        if(board[index] ===  ' ') {
-            //send Request to make game
-            board[index] = userToken;
-            makeTurn(index);
+    if(!hasWon) {
+        //Check if it is users turn
+        if(currentTurn === userId) {
+            //Is local players turn
+            
+            //Check if place is empty
+            if(board[index] ===  ' ') {
+                //send Request to make game
+                board[index] = userToken;
+                makeTurn(index);
+            } else {
+                console.log("can't place here");
+            }
+    
+            document.getElementById('square__' + index).innerHTML = userToken;
+            currentTurn = null;
         } else {
-            console.log("can't place here");
+            alert("Isn't your turn!");
         }
- 
-        console.log(index);
-    } else {
-        alert("Isn't your turn!");
     }
 }
 
@@ -198,6 +215,11 @@ function makeTurn(index) {
             leaveGame(false);
         }
 
+        //Check for if game has won
+        if(data.gameHasWon) {
+           handleWin(data);
+        }
+
         //if data is valid
         storeRequestData(data.gameState);
 
@@ -211,6 +233,7 @@ function storeRequestData(gameState) {
         //Setting other user ID
         if(gameState.userId[0] === userId) {
             //First person in the array has the token '0'
+            //Second person in the arry has the token 'X'
             //setting the users token
             otherToken = 'X';
             userToken = '0';
@@ -235,8 +258,25 @@ function storeRequestData(gameState) {
     currentTurn = gameState.userId[gameState.currentTurn];
 }
 
+//Function for handling a user winning the game
+function handleWin(data) {
+    hasWon = true;
+
+    //Check to see if winner was user or other
+    if(data.winnerId === userId) {
+        //Local has won
+        console.log("Local won");
+        document.getElementById('game__banner').innerHTML = `${username} has won!`
+    } else {
+        console.log("other won");
+        //Other has won
+        document.getElementById('game__banner').innerHTML = `${otherUsername} has won!`
+    }
+    document.getElementById('winner__box').style.visibility = "visible";
+}
+
 //CODE FOR API REQUEST FOR GAME DATA KINDA LIKE UDP but slower with responses
-const delayTimer = 5000;
+const delayTimer = 2000;
 const timer = setInterval(() => {
     //During timer we need to check a couple things
     //Update game data
