@@ -1,3 +1,8 @@
+let ip = location.host;
+if(ip === '') {
+    ip = "localhost";
+}
+
 //function for signing up new users
 async function signupUser() {
     const username = document.getElementById('username').value;
@@ -7,7 +12,7 @@ async function signupUser() {
     if(password === repassword) {
         //Create new user
         //Check to see if username is taken in the DB
-        const usernameTaken = await fetch("http://localhost:4000/api/signup", {
+        const usernameTaken = await fetch(`http://${ip}:4000/api/signup`, {
             method: 'POST',
             body: JSON.stringify({
                 username: username,

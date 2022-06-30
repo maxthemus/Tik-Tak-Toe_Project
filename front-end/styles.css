@@ -314,3 +314,32 @@ body {
 .game__button:hover {
 	background-color: grey;
 }
+
+/* menu styles */
+.menu__buttons {
+	align-self: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 20vh;
+}
+
+.menu__but {
+	width: 100%;
+	background-color: #5C6B73;
+	font-size: 20px;
+	border: none;
+	height: 5vh;
+	transition: ease-in-out 0.5s all;
+}
+.menu__but:hover {
+	background-color: #5C6B73;
+	font-weight: bold;
+	border-radius: 20px;
+}
+
+.menu__title {
+	align-self: center;
+}

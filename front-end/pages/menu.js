@@ -1,3 +1,8 @@
+let ip = location.host;
+if(ip === '') {
+    ip = "localhost";
+}
+
 let userId = sessionStorage.getItem('userId');
 let username = "";
 let userWins = 0;
@@ -10,7 +15,7 @@ if(!sessionStorage.getItem('userId')) {
 
 window.onload = function getUserInfo () {
 
-  fetch('http://localhost:4000/api/user/'+userId)
+  fetch(`http://${ip}:4000/api/user/`+userId)
         .then((res) => {
             return res.json();
         }).then(data => {
@@ -20,6 +25,10 @@ window.onload = function getUserInfo () {
                 username =  data.user.username;
                 sessionStorage.setItem('username', username);
                 
+                userWins = data.user.wins;
+                userLosses = data.user.losses;
+                userTies = data.user.ties;
+
             } else {
                 alert("STOP HACKING PLZ");
                 logoutUser();
@@ -39,6 +48,9 @@ function logoutUser() {
 function updateText() {
     console.log("CALLED");
     document.getElementById('dis__username').innerHTML = username;
+
+    document.getElementById('local__top__stats').innerHTML = `${userWins}-${userLosses}-${userTies}`;
+
 }
 
 
@@ -50,7 +62,7 @@ async function findGame() {
     let findingGame = true;
 
     //Send post request to the api
-    let serverRes = await fetch("http://localhost:4000/api/game/findGame", {
+    let serverRes = await fetch(`http://${ip}:4000/api/game/findGame`, {
         method: 'POST',
         body: JSON.stringify({
             userId: userId

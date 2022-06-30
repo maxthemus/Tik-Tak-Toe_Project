@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql');
 
+
 //Setting up mysql connection
 const connection = mysql.createConnection({
     host: "127.0.0.1",
@@ -15,8 +16,8 @@ connection.connect((err) => {
     if(err) throw err;
     console.log("Connected to DB");
 })
-
 //DB DONE
+
 
 //Setting up expres app
 const app = express();
@@ -47,8 +48,6 @@ app.post('/api/login', async (req, res) => {
             //if username match then check password 
             if(tempUser.password === foundUser.password) {
                 //if both match return ture
-                //console.log(foundUser);
-
                 res.send({
                     loggedIn: true,
                     userId: foundUser.userId
@@ -79,7 +78,7 @@ app.post('/api/signup', async (req, res) => {
         } else {
             //DIDN'T FIND A MATCH
             //Creating new user
-            const newUserStatement = `INSERT INTO users (username, password) VALUES ('${tempUser.username}', '${tempUser.password}');`;
+            const newUserStatement = `INSERT INTO users (username, password, wins, losses, ties) VALUES ('${tempUser.username}', '${tempUser.password}', 0, 0, 0);`;
             connection.query(newUserStatement, (err, results) => {
                 if(err) {
                     //Send back that username is taken
@@ -107,7 +106,10 @@ app.get('/api/user/:userId', async (req, res) => {
             //The user was found
             const user = {
                 username: results[0].username,
-                userId: results[0].userID
+                userId: results[0].userID,
+                wins: results[0].wins,
+                losses: results[0].losses,
+                ties: results[0].ties
             }
             res.send({
                 valid: true,
@@ -119,6 +121,20 @@ app.get('/api/user/:userId', async (req, res) => {
             })
         }
     });
+})
+
+//Updating user info
+app.post('/api/update/user/:userId', async (req, res) => {
+    const userId = req.params.userID;
+
+    const statement = `UPDATE users SET wins=${req.body.wins}, losses=${req.body.losses}, ties=${req.body.ties};`;
+    connection.query(statement, (err, results) => {
+        if(!err) {
+            res.send({updatedInfo: true});
+        } else {
+            res.send({updatedInfo: false});
+        }
+    })
 })
 
 /* code for making games and creating servers for the lobbies */
@@ -169,7 +185,6 @@ app.post('/api/game/makeTurn/:gameId', async (req, res) => {
 
             //Checking to see if game has been won
             let gameIsWon = await checkGameWon(currentGames[gameId]);
-            console.log(gameIsWon)
 
             if(gameIsWon === 'X' || gameIsWon == '0') {
                 //Getting winner id  
@@ -181,6 +196,8 @@ app.post('/api/game/makeTurn/:gameId', async (req, res) => {
                     winId = currentGames[gameId].userId[0];
                 }
     
+
+
                 //Game has been won
                 res.send({
                     turnMade: true,
@@ -239,7 +256,6 @@ app.post('/api/game/findGame', async (req, res) => {
 
 //Function for creating new games
 function createGame(creatorId, gameIsPrivate) {
-    //console.log(currentGames);
 
     let newGame = {
         gameId: 0,
@@ -320,14 +336,12 @@ function checkGameWon(gameState) {
     for(let i = 0; i < 7; i += 3) {
         if(tempBoard[i] === tempBoard[i+1] && tempBoard[i+1] === tempBoard[i+2]) {
             if(tempBoard[i] !== ' ' && tempBoard[i + 1] !== ' ' && tempBoard[i + 2] !== ' ') {
-                console.log("IN A BAD PLACE TO BE 1");
                 return tempBoard[i];
             }
         }
         //Checking if col is the same 
         if(tempBoard[i] === tempBoard[i+3] && tempBoard[i+3] === tempBoard[i+6]) {
             if(tempBoard[i] !== ' ' && tempBoard[i + 3] !== ' ' && tempBoard[i+6] !== ' ') {
-                console.log("IN A BAD PLACE TO BE 2");
                 return tempBoard[i];
             }
         }
@@ -336,7 +350,6 @@ function checkGameWon(gameState) {
     //Checking topleft to bottom right
     if(tempBoard[0] === tempBoard[4] && tempBoard[4] === tempBoard[8]) {
         if(tempBoard[0] !== ' ' && tempBoard[4] !== ' ' && tempBoard[8] !== ' ') {
-            console.log("IN A BAD PLACE TO BE 3");
             return tempBoard[0];
         }
     }
@@ -344,11 +357,12 @@ function checkGameWon(gameState) {
     //Checking topRight to bottom left
     if(tempBoard[2] === tempBoard[4] && tempBoard[4] === tempBoard[6]) {
         if(tempBoard[0] !== ' ' && tempBoard[4] !== ' ' && tempBoard[6] !== ' ') {
-            console.log("IN A BAD PLACE TO BE 4");
             return tempBoard[0];
         }
     }
 }
+
+
 
 //Funciton for removing the game from array
 function endGame(gameId) {

@@ -1,4 +1,7 @@
-
+let ip = location.host;
+if(ip === '') {
+    ip = "localhost";
+}
 //Local user info
 let userId = sessionStorage.getItem('userId');
 let username = "";
@@ -32,13 +35,18 @@ if(!sessionStorage.getItem('userId')) {
 
 window.onload = function getUserInfo () {
 
-    fetch('http://localhost:4000/api/user/'+userId)
+    fetch(`http://${ip}:4000/api/user/`+userId, {
+        method: "GET",
+    })
         .then((res) => {
             return res.json();
         }).then(data => {
 
             if(data.valid) {
                 username =  data.user.username;
+                userWins = data.user.wins;
+                userLosses = data.user.losses;
+                userTies = data.user.ties;
                 sessionStorage.setItem('username', username);
                 
             } else {
@@ -79,8 +87,12 @@ function updateText() {
     }
 
     //Updating the users w-l-t
+    document.getElementById('local__top__stats').innerHTML = `${userWins}-${userLosses}-${userTies}`;
+    document.getElementById('sml__stats').innerHTML = `${userWins}-${userLosses}-${userTies}`;
     //Updating the other users w-l-t
-    
+    if(otherWins && otherLosses && othterTies) {
+        document.getElementById('other__stats').innerHTML = `${otherWins}-${otherLosses}-${othterTies}`;
+    }    
 
     //Updating the lobby number
     document.getElementById('game__num').innerHTML = `Lobby: ${gameId}`;
@@ -101,13 +113,14 @@ function updateText() {
     for(let i = 0; i < board.length; i++) {
         document.getElementById(`square__${i}`).innerHTML = board[i];
     }
+
 }
 
 
 //Funcitons for getting game information for setup
 function getGameInfo() {
 
-    fetch('http://localhost:4000/api/game/getGame/'+gameId, {
+    fetch(`http://${ip}:4000/api/game/getGame/`+gameId, {
         method: 'POST',
         body: JSON.stringify({
             userId: userId
@@ -147,13 +160,18 @@ function getGameInfo() {
 
 function getOtherUserInfo(otherUserId) {
 
-    fetch('http://localhost:4000/api/user/'+otherUserId)
+    fetch(`http://${ip}:4000/api/user/`+otherUserId, {
+        method: "GET",
+    })
         .then((res) => {
             return res.json();
         }).then(data => {
 
             if(data.valid) {
                 otherUsername =  data.user.username;
+                otherWins = data.user.wins;
+                otherLosses = data.user.losses;
+                othterTies = data.user.ties;
             } else {
                 alert("STOP HACKING PLZ");
                 logoutUser();
@@ -188,7 +206,7 @@ function placePiece(index) {
 //Function for make a turn and send the api request
 function makeTurn(index) {
     //Making the api request
-    fetch('http://localhost:4000/api/game/makeTurn/'+gameId, {
+    fetch(`http://${ip}:4000/api/game/makeTurn/`+gameId, {
         method: 'POST',
         body: JSON.stringify({
             userId: userId,
@@ -266,13 +284,39 @@ function handleWin(data) {
     if(data.winnerId === userId) {
         //Local has won
         console.log("Local won");
+        updateInfo("won");
         document.getElementById('game__banner').innerHTML = `${username} has won!`
     } else {
         console.log("other won");
+        updateInfo("loss");
         //Other has won
         document.getElementById('game__banner').innerHTML = `${otherUsername} has won!`
     }
     document.getElementById('winner__box').style.visibility = "visible";
+}
+
+//Function for send api request to update the users info
+function updateInfo(winType) {
+    if(winType === "won") {
+        userWins++;
+    } else if(winType === "loss") {
+        userLosses++;
+    } else if(winType === "tie") {
+        userTies++;
+    }
+
+    //Now send api request with updated data
+    fetch(`http://${ip}:4000/api/update/user/`+userId, {
+        method: 'POST',
+        body: JSON.stringify({
+            wins: userWins,
+            losses: userLosses,
+            ties: userTies
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    }).then(() => updateText());
 }
 
 //CODE FOR API REQUEST FOR GAME DATA KINDA LIKE UDP but slower with responses

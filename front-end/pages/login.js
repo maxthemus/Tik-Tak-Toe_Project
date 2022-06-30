@@ -1,12 +1,16 @@
-
+let ip = location.host;
+if(ip === '') {
+    ip = "localhost";
+}
 
 //Function for logging in user
 async function loginUser() {
+    console.log(ip);
     //variables for the username and password
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    const loginResult = await fetch("http://localhost:4000/api/login", {
+    const loginResult = await fetch(`http://${ip}:4000/api/login`, {
         method: 'POST',
         body: JSON.stringify({
             username: username,
